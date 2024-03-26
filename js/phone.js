@@ -1,11 +1,11 @@
-const loadData = async (searchTxt,isShowAll) => {
+const loadData = async (searchTxt = '13', isShowAll) => {
     const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchTxt}`);
     const data = await res.json();
     const phones = data.data;
     // console.log(phones);
-    displayPhones(phones,isShowAll);
+    displayPhones(phones, isShowAll);
 }
-const displayPhones = (phones,isShowAll) => {
+const displayPhones = (phones, isShowAll) => {
     const phoneContainer = document.getElementById('phone-container');
     phoneContainer.textContent = '';
     //  console.log(phones.length);
@@ -17,9 +17,9 @@ const displayPhones = (phones,isShowAll) => {
     else {
         showAllContainer.classList.add('hidden');
     }
-    console.log('is Show all ',isShowAll);
+    // console.log('is Show all ',isShowAll);
     //display only first 15 phones
-    if(!isShowAll){
+    if (!isShowAll) {
         phones = phones.slice(0, 15);
     }
     phones.forEach(phone => {
@@ -44,12 +44,36 @@ const displayPhones = (phones,isShowAll) => {
     toggleLoadingSpinner(false);
 }
 //handle show Details
-const handleShowDetails = async(id) =>{
-    console.log(id);
+const handleShowDetails = async (id) => {
+    // console.log(id);
     //load  single phone data
     const res = await fetch(`https://openapi.programming-hero.com/api/phone/${id}`);
     const data = await res.json();
-    console.log(data);
+    const phone = data.data;
+    showPhoneDetails(phone);
+}
+//show phone details
+const showPhoneDetails = (phone) => {
+    console.log(phone);
+    const phoneName = document.getElementById('show-phone-details-name');
+
+    phoneName.innerText = phone.name;
+    const showDetailsContainer = document.getElementById('show-details-container');
+    // showDetailsContainer.classList.add('text-center');
+    // showDetailsContainer.classList.add('flex');
+    // showDetailsContainer.classList.add('flex-col');
+    // showDetailsContainer.classList.add('items-center');
+
+    showDetailsContainer.innerHTML = `
+        <img class="mx-auto" src = "${phone.image}"/>
+        <p class="text-wrap"><span class="font-bold">Chipset: </span>${phone?.mainFeatures?.chipSet}</p>
+        <p class="text-wrap"><span class="font-bold">Display Size: </span>${phone?.mainFeatures?.displaySize}</p>
+        <p class="text-wrap"><span class="font-bold">Memory: </span>${phone?.mainFeatures?.memory}</p>
+        <p class="text-wrap"><span class="font-bold">Storage: </span>${phone?.mainFeatures?.storage}</p>
+        <p class="text-wrap"><span class="font-bold">GPS:</span>${phone?.others?.GPS}</p>
+    `
+    //show the modal
+    show_details_modal.showModal()
 }
 
 //handle search
@@ -58,7 +82,7 @@ const handleSearch = (isShowAll) => {
     const searchField = document.getElementById('search-field');
     const searchTxt = searchField.value;
     // console.log(searchTxt);
-    loadData(searchTxt,isShowAll);
+    loadData(searchTxt, isShowAll);
 }
 const toggleLoadingSpinner = (isLoading) => {
     const loadingSpinner = document.getElementById('loading-spinner');
@@ -71,7 +95,7 @@ const toggleLoadingSpinner = (isLoading) => {
 }
 
 //handle show all
-const handleShowall=()=>{
-        handleSearch(true);
+const handleShowall = () => {
+    handleSearch(true);
 }
-// loadData();
+loadData();
