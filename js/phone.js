@@ -8,6 +8,17 @@ const loadData = async (searchTxt) => {
 const displayPhones = phones => {
     const phoneContainer = document.getElementById('phone-container');
      phoneContainer.textContent='';
+    //  console.log(phones.length);
+    //display show all button if there are more than 15 phones
+    const showAllContainer = document.getElementById('show-all-container');
+    if(phones.length>15){
+        showAllContainer.classList.remove('hidden');
+    }
+    else{
+        showAllContainer.classList.add('hidden');
+    }
+     //display only first 15 phones
+    phones = phones.slice(0,15);
     phones.forEach(phone => {
         console.log(phone);
         const phoneCard = document.createElement('div');
